@@ -4,16 +4,16 @@ QEMU = qemu-system-i386
 
 KERNEL_OFFSET = 0x1000
 
-kernel_entry.o: kernel_entry.asm
+kernel_entry.o: boot/kernel_entry.asm
 	nasm $< -o $@  -f elf
 
-kernel.o: kernel.c
+kernel.o: kernel/kernel.c
 	$(GCC) -ffreestanding -c $< -o  $@
 
 kernel.bin: kernel_entry.o kernel.o
 	$(LD) -o $@ -Ttext $(KERNEL_OFFSET) $^ --oformat binary
 
-boot.bin: boot.asm disk.asm gdt.asm print.asm switch32.asm
+boot.bin: boot/boot.asm boot/disk.asm boot/gdt.asm boot/print.asm boot/switch32.asm
 	nasm $< -o $@  -f bin
 
 .PHONY: clean qemu image

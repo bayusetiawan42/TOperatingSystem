@@ -23,18 +23,18 @@ kernel_load:
 	mov bx, DEBUG_KERNEL_LOAD
 	call print
 
-	;disk_load(es:bx, 15, BOOT_DRIVE)
-	mov bx, KERNEL_OFFSET
-	mov dh, 15
+	; Load kernel to KERNEL_OFFSET
 	mov dl, [BOOT_DRIVE]
+	mov dh, 15
+	mov bx, KERNEL_OFFSET
 	call disk_load
 
 	ret
 
-%include "print.asm"
-%include "gdt.asm"
-%include "disk.asm"
-%include "switch32.asm"
+%include "boot/print.asm"
+%include "boot/gdt.asm"
+%include "boot/disk.asm"
+%include "boot/switch32.asm"
 
 [bits 32]
 
@@ -45,7 +45,7 @@ START_32:
 
 BOOT_DRIVE:   db 0x00
 
-DEBUG_SWITCH_32:       db "Starting 32-bit mode...", 0x0
+DEBUG_SWITCH_32:       db "Starting 32-bit mode...", 0xa, 0x0
 DEBUG_KERNEL_LOAD:     db "Loading kernel to memory...", 0xa, 0x0
 
 times 510 - ($-$$) db 0x00

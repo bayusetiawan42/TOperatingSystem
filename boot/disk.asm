@@ -1,5 +1,5 @@
 ; Arguments Needed:
-; 	DH = Number of sector to read
+; 	DH = Number of sector to read  (0-15)
 ; 	DL = Drive number
 ; 	ES:BX = pointer to buffer   memory address for copy of disk
 ; 	                            Used by the INT 0x13,2
