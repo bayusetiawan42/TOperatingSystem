@@ -1,2 +1,6 @@
 *.swp
 *.bin
+*.o
+*.bin
+*.img
+
