@@ -1,6 +1,6 @@
 [bits 16]
 
-;takes the argument 'bx'
+; takes the argument 'bx'
 print:
 	pusha
 	mov ah, 0x0e
@@ -30,28 +30,28 @@ print:
 	popa
 	ret
 
-;takes the argument 'dx'
+; takes the argument 'dx'
 print_word:
 	pusha
 	mov cx, 0
 .loop:
-	cmp cx, 4                    ; while (cx < 4)
+	cmp cx, 4
 	je .end
 
 	; Convert to ASCII
 	mov ax, dx
-	and ax, 0x000f               ; 0x1234 -> 0x0004
+	and ax, 0x000f               ; Set only the last bit
 	add al, 0x30                 ; convert to ASCII 1-9
 	cmp al, 0x39                 ; if N > 9  add extra 8 to represent 'A' - 'F'
 	jle .modif_word
 	add al, 7                    ; ASCII A-Z is 0x41-0x46. Added 7 so it became 0x40
 .modif_word:
+; replace *bx position with ASCII from al
 	mov bx, .HEX_OUT + 5
 	sub bx, cx
-	; replace *bx position with ASCII from al
 	mov [bx], al 
-	ror dx, 4   ; since we just eliminate 0x000f
-	            ; so rotate 4 times 0x1234 -> 0x4123 -> 0x3412 -> 0x2341 -> 0x1234
+	ror dx, 4           ; since we just keep the last bit
+	                    ; so rotate 4 times 0x1234 -> 0x4123 -> 0x3412 -> 0x2341 -> 0x1234
 
 	inc cx
 	jmp .loop
@@ -76,33 +76,5 @@ print_nl:
 	mov al, 0xd
 	int 0x10
 
-	popa
-	ret
-
-[bits 32]
-
-VIDEO_MEMORY     equ    0xb8000
-WHITE_ON_BLACK   equ    0x0f
-
-;Takes the 'ebx' as a string pointer
-vga_print:
-	pusha
-	mov edx, VIDEO_MEMORY
-
-.loop:
-	cmp [ebx], 0
-	jz .end
-
-	mov al, [ebx]
-	mov ah, WHITE_ON_BLACK
-
-	mov [edx], ax
-
-	inc ebx
-	add edx, 2
-
-	jmp .loop
-
-.end:
 	popa
 	ret

@@ -1,6 +1,6 @@
 char* VGAMem = (char *) 0xb8000;
 
-void vga_print(char* str)
+void VGAPrint(char* str)
 {
 	while (*str) {
 		*VGAMem++ = *str++;
@@ -10,5 +10,5 @@ void vga_print(char* str)
 
 void KMain()
 {
-	vga_print("Hello world");
+	VGAPrint("Hello world");
 }

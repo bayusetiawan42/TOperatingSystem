@@ -10,20 +10,20 @@ kernel_entry.o: boot/kernel_entry.asm
 kernel.o: kernel/kernel.c
 	$(GCC) -ffreestanding -c $< -o  $@
 
+# Always link kernel_entry.o as the first perequiretes so it can call
+# KMain() correctly
 kernel.bin: kernel_entry.o kernel.o
 	$(LD) -o $@ -Ttext $(KERNEL_OFFSET) $^ --oformat binary
 
 boot.bin: boot/boot.asm boot/disk.asm boot/gdt.asm boot/print.asm boot/switch32.asm
 	nasm $< -o $@  -f bin
 
-.PHONY: clean qemu image
+.PHONY: clean qemu
 clean:
-	rm -f *.bin *.o os-image
+	rm -f *.bin *.o kernel.img
 
-qemu: os-image
+qemu: kernel.img
 	$(QEMU) -fda $<
 
-image: os-image
-
-os-image: boot.bin kernel.bin
-	cat $^ > os-image
+kernel.img: boot.bin kernel.bin
+	cat $^ > kernel.img
