@@ -1,6 +1,8 @@
 ; Arguments Needed:
 ; 	DH = Number of sector to read
+; 	DL = Drive number
 ; 	ES:BX = pointer to buffer   memory address for copy of disk
+; 	                            Used by the INT 0x13,2
 
 disk_load:
 	pusha
@@ -8,8 +10,7 @@ disk_load:
 	; Save the arguments because INT 0x13h changes registers
 	push dx
 
-	; setup
-	mov ah, 0x02
+	mov ah, 0x02   ; INT 0x13,2
 	mov al, dh     ; number sector to read
 	mov cl, 0x02   ; sector index
 	mov ch, 0x00   ; cylinder number
@@ -42,7 +43,7 @@ disk_load:
 	call print_nl
 
 .disk_die:
-	; die inside
+
 	jmp $
 
 .DISK_ERROR: db " Disk read error", 0x00
