@@ -8,7 +8,7 @@ kernel_entry.o: boot/kernel_entry.asm
 	nasm $< -o $@  -f elf
 
 kernel.o: kernel/kernel.c
-	$(GCC) -ffreestanding -c $< -o  $@
+	$(GCC) -ffreestanding -c $< -o  $@  -I.
 
 # Always link kernel_entry.o as the first perequiretes so it can call
 # KMain() correctly
