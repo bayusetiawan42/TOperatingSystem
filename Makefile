@@ -1,6 +1,7 @@
 CC = i386-elf-gcc
 LD = i386-elf-ld
 QEMU = qemu-system-i386
+BOCHS = bochs
 
 .DEFAULT_GOAL := kernel.img
 
@@ -37,9 +38,12 @@ boot.bin: boot/boot.asm boot/disk.asm boot/gdt.asm boot/print.asm boot/switch32.
 
 #***********************************************
 #Scripts
-.PHONY: clean qemu
+.PHONY: clean qemu bochs
 clean:
 	rm -f kernel_entry.o $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) kernel.img boot.bin kernel.bin
 
 qemu: kernel.img
 	$(QEMU) -fda $<
+
+bochs: kernel.img bochsrc
+	$(BOCHS)
