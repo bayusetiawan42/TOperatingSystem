@@ -4,6 +4,8 @@ QEMU = qemu-system-i386
 
 .DEFAULT_GOAL := kernel.img
 
+COMMON_CFLAGS = -O2 -ffreestanding -nostdlib
+
 #***********************************************
 #Build kernels
 
@@ -22,7 +24,7 @@ kernel.bin: kernel_entry.o $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS)
 	$(LD) -o $@ -Ttext $(KERNEL_OFFSET) $^ --oformat binary
 
 %.o: %.c
-	$(CC)  -ffreestanding -o $@ -c $< -I.
+	$(CC) $(COMMON_CFLAGS) -o $@ -c $< -I.
 
 kernel.img: boot.bin kernel.bin
 	cat $^ > kernel.img

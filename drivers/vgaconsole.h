@@ -12,7 +12,7 @@ enum {
 #define WHITE_ON_BLACK 0x0f
 
 //Characters
-void VGAPut(int c, int col, int row, char attr);         //Put character at col,row with attr(ibute)
+void VGAPut(int c, int col, int row, char attr);         //Direct put character at col,row with attr(ibute)
 void VGAPutsAt(const char* s, int at);                   //Puts list of characters starting from at
 void VGAPuts(const char *s);                             //Puts list of characters at current cursor position
 
