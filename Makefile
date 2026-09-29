@@ -8,7 +8,7 @@ QEMU = qemu-system-i386
 KERNEL_OFFSET = 0x1000 #I dont know why someone need to change it
 
 KERNEL_SOURCES = kernel/kernel.c
-DRIVERS_SOURCES = drivers/ports.c
+DRIVERS_SOURCES = drivers/ports.c drivers/vgaconsole.c
 
 DRIVERS_OBJECTS = $(DRIVERS_SOURCES:.c=.o)
 KERNEL_OBJECTS = $(KERNEL_SOURCES:.c=.o)
@@ -22,6 +22,9 @@ kernel.bin: kernel_entry.o $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS)
 
 %.o: %.c
 	$(CC)  -ffreestanding -o $@ -c $< -I.
+
+kernel.img: boot.bin kernel.bin
+	cat $^ > kernel.img
 
 #***********************************************
 #Build bootsector
@@ -37,6 +40,3 @@ clean:
 
 qemu: kernel.img
 	$(QEMU) -fda $<
-
-kernel.img: boot.bin kernel.bin
-	cat $^ > kernel.img
