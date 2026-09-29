@@ -9,16 +9,16 @@ gdt_code:           ; 0x08
 	dw 0xffff
 	dw 0x0000
 	db 0x00
-	db 10011010b
-	db 11001111b
+	db 10011010b  ; P=1, DPL=00, S=1, E=1, DC=0, RW=1, A=0
+	db 11001111b  ; G=1, DB=1, L=0, 0,  SEGMENT LIMIT 1111
 	db 0x00
 
 gdt_data:           ; 0x16
 	dw 0xffff
 	dw 0x0000
 	db 0x00
-	db 10010010b
-	db 11001111b
+	db 10010010b  ; P=1, DPL=00, S=1, E=0. DC=0, RW=1, A=0
+	db 11001111b  ; G1, DB=1, L=0, 0, SEGMENT LIMIT 1111
 	db 0x00
 
 gdt_end:
