@@ -6,7 +6,6 @@
 
 static char* vga_memory = (char*) 0xb8000;
 
-//Get logical cursor position
 int VGAGetCursor(void)
 {
 	int pos = 0;
@@ -19,7 +18,6 @@ int VGAGetCursor(void)
 	return pos * 2;
 }
 
-//Set cursor physical position
 void VGASetCursor(int col, int row)
 {
 	int offset = VGAGetOffset(col, row) / 2;
@@ -30,7 +28,6 @@ void VGASetCursor(int col, int row)
 	PortOutB(VGA_REG_DATA, (unsigned char)(offset & 0x00ff));
 }
 
-//Put character at col,row
 void VGAPut(int c, int col, int row, char attr)
 {
 	int offset = VGAGetOffset(col, row);
@@ -39,7 +36,6 @@ void VGAPut(int c, int col, int row, char attr)
 
 }
 
-//Put a list of characters s starting from at
 void VGAPutsAt(const char* s, int at)
 {
 	int col = VGAGetOffsetCol(at);
@@ -60,25 +56,33 @@ void VGAPutsAt(const char* s, int at)
 	VGASetCursor(col, row);
 }
 
-//Put a list of characters s at current cursor
 void VGAPuts(const char *s)
 {
 	VGAPutsAt(s, VGAGetCursor());
 }
 
-//Get logical offset from physical col,row
+void VGAClear(void)
+{
+	int len = MAX_ROWS * MAX_COLS * 2;
+
+	for (int i = 0; i < len; i += 2) {
+		vga_memory[i] = 0x00;
+		vga_memory[i+1] = WHITE_ON_BLACK;
+	}
+
+	VGASetCursor(0, 0);
+}
+
 int VGAGetOffset(int col, int row)
 {
 	return (row * MAX_COLS + col) * 2;
 }
 
-//Get logical row offset from offset
 int VGAGetOffsetRow(int offset)
 {
 	return offset / (2 * MAX_COLS);
 }
 
-//Get logical col offset from offset
 int VGAGetOffsetCol(int offset)
 {
 	return (offset - (VGAGetOffsetRow(offset) * 2 * MAX_COLS)) / 2;

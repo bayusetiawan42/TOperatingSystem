@@ -11,16 +11,21 @@ enum {
 
 #define WHITE_ON_BLACK 0x0f
 
-void VGAPut(int c, int col, int row, char attr);
+//Characters
+void VGAPut(int c, int col, int row, char attr);         //Put character at col,row with attr(ibute)
+void VGAPutsAt(const char* s, int at);                   //Puts list of characters starting from at
+void VGAPuts(const char *s);                             //Puts list of characters at current cursor position
 
-void VGAPutsAt(const char* s, int at);
-void VGAPuts(const char *s);
+//Screen
+void VGAClear(void);                                     //Clears the VGA screen
 
-int VGAGetCursor(void);
-void VGASetCursor(int col, int row);
+//Cursor
+int VGAGetCursor(void);                                  //Get logical cursor position
+void VGASetCursor(int col, int row);                     //Set cursor physical position
 
-int VGAGetOffset(int col, int row);
-int VGAGetOffsetRow(int offset);
-int VGAGetOffsetCol(int offset);
+//Misc.
+int VGAGetOffset(int col, int row);                      //Get logical offset position from col,row
+int VGAGetOffsetRow(int offset);                         //Get physical row position from logical offset
+int VGAGetOffsetCol(int offset);                         //Get physical col position from logical offset
 
 #endif

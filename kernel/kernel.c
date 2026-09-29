@@ -3,6 +3,7 @@
 
 void KMain()
 {
+	VGAClear();
 	VGAPuts("Hello world\n");
 	VGAPuts("Kernel booted.\nTerry\nDavis.\nYe");
 }
