@@ -2,6 +2,8 @@ CC = i386-elf-gcc
 LD = i386-elf-ld
 QEMU = qemu-system-i386
 
+.DEFAULT_GOAL := kernel.img
+
 #***********************************************
 #Build kernels
 
