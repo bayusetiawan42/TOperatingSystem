@@ -7,7 +7,7 @@ switch_to_32:
 
 	; set last bit
 	mov eax, cr0
-	or eax, 0x0001
+	or eax, 00000001b
 	mov cr0, eax
 
 	; Make a far jump so it flush CPU pipeline
