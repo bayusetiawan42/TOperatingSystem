@@ -18,7 +18,6 @@ KERNEL_OBJECTS = $(KERNEL_SOURCES:.c=.o)
 kernel_entry.o: boot/kernel_entry.asm
 	nasm $< -o $@  -f elf
 
-#Always link kernel_entry.o as the first perequiretes so it can call KMain() correctly
 kernel.bin: kernel_entry.o $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS)
 	$(LD) -o $@ -Ttext $(KERNEL_OFFSET) $^ --oformat binary
 

@@ -45,7 +45,7 @@ void VGAPutsAt(const char* s, int at)
 	int col = VGAGetOffsetCol(at);
 	int row = VGAGetOffsetRow(at);
 
-	for (char *p = s; *p; ++p) {
+	for (const char *p = s; *p; ++p) {
 		if (*p == '\n') {
 			col = 0;
 			row++;
