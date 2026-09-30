@@ -1,23 +1,17 @@
 #ifndef _VGACONSOLE_H
 #define _VGACONSOLE_H
 
-//0x3d4
-//  14     High byte cursor/horizontal
-//  15     Low byte cursor/horizontal
-enum {
-	VGA_REG_CTRL = 0x3d4,  //CONTROLS
-	VGA_REG_DATA = 0x3d5,  //DATA / Output
-} VGA_Registers;
-
 #define WHITE_ON_BLACK 0x0f
 
 //Characters
-void VGAPut(int c, int col, int row, char attr);         //Direct put character at col,row with attr(ibute)
-void VGAPutsAt(const char* s, int at);                   //Puts list of characters starting from at
-void VGAPuts(const char *s);                             //Puts list of characters at current cursor position
+void VGAPut(char c, int col, int row, char attr);        //Direct put character at col,row with attr(ibute)   (limited, pixel like doesn't set cursor)
+void VGAPutc(char c, int col, int row, char attr);       //Put character starting from col,row.  sets cursor
+void VGAPutchar(char c, char attr);                      //Put character starting from current cursor position.  sets cursor
+void VGAPuts(const char *s);                             //Puts list of characters at current cursor position.  sets cursor
 
 //Screen
 void VGAClear(void);                                     //Clears the VGA screen
+void VGAScroll(int n);                                   //Scroll screen N times
 
 //Cursor
 int VGAGetCursor(void);                                  //Get logical cursor position

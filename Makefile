@@ -12,10 +12,10 @@ COMMON_CFLAGS = -O2 -ffreestanding -nostdlib
 
 KERNEL_OFFSET = 0x1000 #I dont know why someone need to change it
 
-KERNEL_SOURCES = kernel/kernel.c
+KERNEL_SOURCES = kernel/kernel.c kernel/utils.c
 KERNEL_ASM = boot/kernel_entry.asm
 
-DRIVERS_SOURCES = drivers/vgaconsole.c
+DRIVERS_SOURCES = drivers/vgacon.c
 DRIVERS_ASM = drivers/ports.asm
 
 KERNEL_OBJECTS = $(KERNEL_SOURCES:.c=.o) $(KERNEL_ASM:.asm=.o)
