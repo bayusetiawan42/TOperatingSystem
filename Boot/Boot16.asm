@@ -1,0 +1,49 @@
+KERNEL_OFFSET EQU 0X1000
+
+[ORG 0X7C00]
+[BITS 16]
+
+	MOV [BOOT_DRIVE], DL
+	MOV BP, 0X9000
+	MOV SP, BP
+
+	CALL KERNEL_LOAD
+
+	MOV BX, DEBUG_BOOT_32
+	CALL PRINT
+
+	CALL BOOT32
+
+	JMP $
+
+KERNEL_LOAD:
+	MOV BX, DEBUG_KERNEL_LOAD
+	CALL PRINT
+
+	;Load kernel to kernel_offset
+	MOV DL, [BOOT_DRIVE]
+	MOV DH, 15
+	MOV BX, KERNEL_OFFSET
+	CALL DISK_LOAD
+
+	RET
+
+%INCLUDE "Boot/PrtScr.asm"
+%INCLUDE "Boot/GDT.asm"
+%INCLUDE "Boot/Disk.asm"
+%INCLUDE "Boot/Boot32.asm"
+
+[BITS 32]
+
+START_32:
+	CALL KERNEL_OFFSET
+
+	JMP $
+
+BOOT_DRIVE:   DB 0X00
+
+DEBUG_BOOT_32:         DB "Starting 32 bit modes...", 0XA, 0X0
+DEBUG_KERNEL_LOAD:     DB "Loading kernel to memory...", 0XA, 0X0
+
+TIMES 510 - ($-$$) DB 0X00
+DW 0XAA55

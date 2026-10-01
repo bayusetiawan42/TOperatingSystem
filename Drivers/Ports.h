@@ -1,7 +1,7 @@
 #ifndef _PORTS_H
 #define _PORTS_H
 
-#include <kernel/types.h>
+#include <Kernel/Types.h>
 
 U8 PortInB(U16 port);
 void PortOutB(U16 port, U8 data);

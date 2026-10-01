@@ -1,5 +1,5 @@
-#include <drivers/ports.h>
-#include <drivers/vgacon.h>
+#include <Drivers/Ports.h>
+#include <Drivers/VGACon.h>
 
 void int_to_ascii(int n, char str[]) {
 	int i, sign;

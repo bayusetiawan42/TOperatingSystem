@@ -1,10 +1,9 @@
 #define MAX_COLS 80
 #define MAX_ROWS 25
 
-#include <kernel/utils.h>
-#include <drivers/vgacon.h>
-#include <drivers/ports.h>
-
+#include <Kernel/Utils.h>
+#include <Drivers/VGACon.h>
+#include <Drivers/Ports.h>
 
 enum
 {

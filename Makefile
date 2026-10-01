@@ -12,16 +12,16 @@ COMMON_CFLAGS = -O2 -ffreestanding -nostdlib
 
 KERNEL_OFFSET = 0x1000 #I dont know why someone need to change it
 
-KERNEL_SOURCES = kernel/kernel.c kernel/utils.c
+KERNEL_SOURCES = Kernel/KMain.c Kernel/Utils.c
 KERNEL_ASM = 
 
-DRIVERS_SOURCES = drivers/vgacon.c
-DRIVERS_ASM = drivers/ports.asm
+DRIVERS_SOURCES = Drivers/VGACon.c
+DRIVERS_ASM = Drivers/Ports.asm
 
 KERNEL_OBJECTS = $(KERNEL_SOURCES:.c=.o) $(KERNEL_ASM:.asm=.o) 
 DRIVERS_OBJECTS = $(DRIVERS_SOURCES:.c=.o) $(DRIVERS_ASM:.asm=.o)
 
-boot/kernel_entry.o: boot/kernel_entry.asm
+Boot/KEntry.o: Boot/KEntry.asm
 
 %.o: %.c
 	$(CC) $(COMMON_CFLAGS) -o $@ -c $< -I.
@@ -30,7 +30,7 @@ boot/kernel_entry.o: boot/kernel_entry.asm
 	nasm -f elf $< -o $@
 
 #Always link kernel_entry.o as first to prevent failed to boot from disk
-kernel.bin: boot/kernel_entry.o $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS)
+kernel.bin: Boot/KEntry.o $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS)
 	$(LD) -o $@ -Ttext $(KERNEL_OFFSET) $^ --oformat binary
 
 kernel.img: boot.bin kernel.bin
@@ -39,17 +39,19 @@ kernel.img: boot.bin kernel.bin
 #***********************************************
 #Build bootsector
 
-boot.bin: boot/boot.asm boot/disk.asm boot/gdt.asm boot/print.asm boot/switch32.asm
+BOOT_SOURCES = Boot/Boot16.asm Boot/Boot32.asm Boot/Disk.asm Boot/GDT.asm Boot/PrtScr.asm
+
+boot.bin: $(BOOT_SOURCES)
 	nasm $< -o $@  -f bin
 
 #***********************************************
 #Scripts
 .PHONY: clean qemu bochs
 clean:
-	rm -f $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) kernel.img boot.bin kernel.bin boot/kernel_entry.o
+	rm -f $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) kernel.img boot.bin kernel.bin Boot/KernelEntry.o
 
 qemu: kernel.img
 	$(QEMU) -fda $<
 
-bochs: kernel.img bochsrc
-	$(BOCHS)
+bochs: kernel.img BochSrc
+	$(BOCHS) -f BochSrc
