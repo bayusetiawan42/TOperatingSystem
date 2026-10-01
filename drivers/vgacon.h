@@ -5,8 +5,8 @@
 
 //Characters
 void VGAPut(char c, int col, int row, char attr);        //Direct put character at col,row with attr(ibute)   (limited, pixel like doesn't set cursor)
-void VGAPutc(char c, int col, int row, char attr);       //Put character starting from col,row.  sets cursor
-void VGAPutchar(char c, char attr);                      //Put character starting from current cursor position.  sets cursor
+void VGAPutC(char c, int col, int row, char attr);       //Put character starting from col,row.  sets cursor
+void VGAPutChar(char c, char attr);                      //Put character starting from current cursor position.  sets cursor
 void VGAPuts(const char *s);                             //Puts list of characters at current cursor position.  sets cursor
 
 //Screen

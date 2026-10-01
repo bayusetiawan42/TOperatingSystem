@@ -13,6 +13,8 @@ enum
 } VGA_Registers;
 
 static char* vga_memory = (char*) 0xb8000;
+//TODO: normalize col,row to unsigned and start from 1
+
 //TODO: Add vga_attr as last attribute than setting manually in function:
 //      Set in codes \#<color_codes>
 //      Set in codes \#0 reset color to WHITE_ON_BLACK
@@ -42,12 +44,20 @@ void VGASetCursor(int col, int row)
 void VGAScroll(int n)
 {
 	int cursor = VGAGetCursor();
+	int prev_col = VGAGetOffsetCol(cursor);
+	int prev_row = VGAGetOffsetRow(cursor);
 
 	for (int i = 0; i < n; i++)
 		for (int j = 0; j < MAX_ROWS; j++)
 			memcpy(vga_memory + VGAGetOffset(0, j-1), vga_memory + VGAGetOffset(0, j), MAX_COLS * 2);
 
-	VGASetCursor(VGAGetOffsetCol(cursor), VGAGetOffsetRow(cursor) - n);
+	for (int i = prev_col; i < (MAX_ROWS * MAX_COLS); i++) {
+		int offset = VGAGetOffset(i, prev_row - n);
+		vga_memory[offset] = 0x00;
+		vga_memory[offset+1] = WHITE_ON_BLACK;
+	}
+
+	VGASetCursor(prev_col, prev_row - n);
 }
 
 void VGAPut(char c, int col, int row, char attr)
@@ -60,13 +70,18 @@ void VGAPut(char c, int col, int row, char attr)
 	vga_memory[offset+1] = attr ? attr : WHITE_ON_BLACK;
 }
 
-void VGAPutc(char c, int col, int row, char attr)
+void VGAPutC(char c, int col, int row, char attr)
 {
-	if (col >= MAX_COLS && row >= MAX_ROWS)
+	if (col >= MAX_COLS || row >= MAX_ROWS) {
 		VGAScroll(1);
 
-	if (c == '\n' || col >= MAX_COLS) {
-		VGASetCursor(0, row+1);
+		int cursor = VGAGetCursor();
+		col = VGAGetOffsetCol(cursor);
+		row = VGAGetOffsetRow(cursor);
+	}
+
+	if (c == '\n') {
+		VGASetCursor(0, row + 1);
 		return;
 	}
 
@@ -74,16 +89,16 @@ void VGAPutc(char c, int col, int row, char attr)
 	VGASetCursor(col+1, row);
 }
 
-void VGAPutchar(char c, char attr)
+void VGAPutChar(char c, char attr)
 {
 	int cursor = VGAGetCursor();
-	VGAPutc(c, VGAGetOffsetCol(cursor), VGAGetOffsetRow(cursor), WHITE_ON_BLACK);
+	VGAPutC(c, VGAGetOffsetCol(cursor), VGAGetOffsetRow(cursor), WHITE_ON_BLACK);
 }
 
 void VGAPuts(const char *s)
 {
-	for (const char *p = s; *p; p++)
-		VGAPutchar(*p, WHITE_ON_BLACK);
+	for (const char *p = s; *p && *p != '\0'; p++)
+		VGAPutChar(*p, WHITE_ON_BLACK);
 }
 
 void VGAClear(void)
