@@ -20,7 +20,7 @@ void KMain()
 	VGAClear();
 
 	VGASetAttr(0x8f);
-	for (int i = 1; i <= 1000; i++) {
+	for (int i = 1; i <= 50; i++) {
 		char s[256];
 		int_to_ascii(i, s);
 		VGAPuts(s);
