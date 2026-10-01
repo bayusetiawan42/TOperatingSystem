@@ -19,16 +19,22 @@ void KMain()
 {
 	VGAClear();
 
+	VGASetAttr(0x8f);
 	for (int i = 1; i <= 1000; i++) {
 		char s[256];
 		int_to_ascii(i, s);
 		VGAPuts(s);
-		VGAPutChar('\n',0x0f);
+		VGAPutChar('\n');
 	}
 
+	VGASetAttr(WHITE_ON_BLACK);
 	VGAPuts("Hello world\n");
 	VGAPuts("Kernel booted.\n");
+
+	VGASetAttr(0x3f);
 	VGAPuts("Hello terry davis!\n");
+	VGASetAttr(WHITE_ON_BLACK);
+
 	VGAPuts("This is a very very very long long long long omg text idk generalpurposeregister general abc rockncrool crocodile abcn.\n");
 	VGAPuts("Text2 test uhuy.!\n");
 	VGAPuts("END");

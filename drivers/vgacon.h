@@ -4,10 +4,12 @@
 #define WHITE_ON_BLACK 0x0f
 
 //Characters
-void VGAPut(char c, int col, int row, char attr);        //Direct put character at col,row with attr(ibute)   (limited, pixel like doesn't set cursor)
-void VGAPutC(char c, int col, int row, char attr);       //Put character starting from col,row.  sets cursor
-void VGAPutChar(char c, char attr);                      //Put character starting from current cursor position.  sets cursor
+void VGAPut(char c, int col, int row);                   //Direct put character at col,row  (limited, pixel like doesn't set cursor)
+void VGAPutC(char c, int col, int row);                  //Put character starting from col,row.  sets cursor
+void VGAPutChar(char c);                                 //Put character starting from current cursor position.  sets cursor
 void VGAPuts(const char *s);                             //Puts list of characters at current cursor position.  sets cursor
+
+void VGASetAttr(char attr);                              //Set VGA attribute
 
 //Screen
 void VGAClear(void);                                     //Clears the VGA screen

@@ -13,12 +13,60 @@ enum
 } VGA_Registers;
 
 static char* vga_memory = (char*) 0xb8000;
+static char vga_attr = WHITE_ON_BLACK;
+
 //TODO: normalize col,row to unsigned and start from 1
 
-//TODO: Add vga_attr as last attribute than setting manually in function:
-//      Set in codes \#<color_codes>
-//      Set in codes \#0 reset color to WHITE_ON_BLACK
+//Characters
+void VGAPut(char c, int col, int row)
+{
+	if (col > MAX_COLS || row > MAX_ROWS)
+		return;
 
+	int offset = VGAGetOffset(col, row);
+	vga_memory[offset] = c;
+	vga_memory[offset+1] = vga_attr;
+}
+
+void VGAPutC(char c, int col, int row)
+{
+	if (col >= MAX_COLS || row >= MAX_ROWS) {
+		VGAScroll(1);
+
+		int cursor = VGAGetCursor();
+		col = VGAGetOffsetCol(cursor);
+		row = VGAGetOffsetRow(cursor);
+	}
+
+	if (c == '\n') {
+		VGASetCursor(0, row + 1);
+		return;
+	}
+
+	VGAPut(c, col, row);
+	VGASetCursor(col+1, row);
+}
+
+void VGAPutChar(char c)
+{
+	int cursor = VGAGetCursor();
+	VGAPutC(c, VGAGetOffsetCol(cursor), VGAGetOffsetRow(cursor));
+}
+
+void VGAPuts(const char *s)
+{
+	for (const char *p = s; *p && *p != '\0'; p++)
+		VGAPutChar(*p);
+}
+
+void VGASetAttr(char attr)
+{
+	if (!attr)
+		attr = WHITE_ON_BLACK;
+	vga_attr = attr;
+}
+
+//Cursor
 int VGAGetCursor(void)
 {
 	int pos = 0;
@@ -41,6 +89,7 @@ void VGASetCursor(int col, int row)
 	PortOutB(VGA_REG_DATA, (unsigned char)(offset & 0x00ff));
 }
 
+//Screen
 void VGAScroll(int n)
 {
 	int cursor = VGAGetCursor();
@@ -60,47 +109,6 @@ void VGAScroll(int n)
 	VGASetCursor(prev_col, prev_row - n);
 }
 
-void VGAPut(char c, int col, int row, char attr)
-{
-	if (col > MAX_COLS || row > MAX_ROWS)
-		return;
-
-	int offset = VGAGetOffset(col, row);
-	vga_memory[offset] = c;
-	vga_memory[offset+1] = attr ? attr : WHITE_ON_BLACK;
-}
-
-void VGAPutC(char c, int col, int row, char attr)
-{
-	if (col >= MAX_COLS || row >= MAX_ROWS) {
-		VGAScroll(1);
-
-		int cursor = VGAGetCursor();
-		col = VGAGetOffsetCol(cursor);
-		row = VGAGetOffsetRow(cursor);
-	}
-
-	if (c == '\n') {
-		VGASetCursor(0, row + 1);
-		return;
-	}
-
-	VGAPut(c, col, row, attr);
-	VGASetCursor(col+1, row);
-}
-
-void VGAPutChar(char c, char attr)
-{
-	int cursor = VGAGetCursor();
-	VGAPutC(c, VGAGetOffsetCol(cursor), VGAGetOffsetRow(cursor), WHITE_ON_BLACK);
-}
-
-void VGAPuts(const char *s)
-{
-	for (const char *p = s; *p && *p != '\0'; p++)
-		VGAPutChar(*p, WHITE_ON_BLACK);
-}
-
 void VGAClear(void)
 {
 	int len = MAX_ROWS * MAX_COLS * 2;
@@ -113,6 +121,7 @@ void VGAClear(void)
 	VGASetCursor(0, 0);
 }
 
+//Misc
 int VGAGetOffset(int col, int row)
 {
 	return (row * MAX_COLS + col) * 2;
