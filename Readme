@@ -1,3 +1,22 @@
-                              T Operating System
+						T Operating System
 
-[]
+Wanted design
+
+    self-hosted Operating System that can compile its own kernel,bootloader,etc in the os itself
+
+To approach this
+
+    * Create my own JIT x86 programming language escaping ELF shit hell  with also simple
+      inline assembly syntax (not like GCC shit assebmly syntax)[named XXX].
+    * Uses my own programming language to create all the kernel, bootloader, etc.
+    * Create my own filesystem format [named idk yet].
+    * Create XXXXXXX.c scripts to convert Linux directory of the source code of this to my own filesystem into the OS.
+    * Create a Text editor in the OS so i can modify the OS source code inside the OS itself.
+    * Create a compiler inside the OS so it can compile itself
+
+    The approach is efficient because i don't need to Create the OS with GCC/ld ELF shit hell first.
+    Which i can write my kernel on my own language even in the host OS (linux) and easily create the
+    compiler in the OS too.
+
+    So after you see the source on the github, its actually just the snapshot version of TOS ported to Linux
+    github project.
