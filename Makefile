@@ -48,7 +48,7 @@ boot.bin: $(BOOT_SOURCES)
 #Scripts
 .PHONY: clean qemu bochs
 clean:
-	rm -f $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) kernel.img boot.bin kernel.bin Boot/KernelEntry.o
+	rm -f $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) kernel.img boot.bin kernel.bin Boot/KEntry.o
 
 qemu: kernel.img
 	$(QEMU) -fda $<
